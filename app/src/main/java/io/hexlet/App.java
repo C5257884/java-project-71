@@ -13,22 +13,24 @@ import java.util.concurrent.Callable;
 public class App implements Callable<Integer> {
 
     @CommandLine.Parameters(index = "0", description = "path to first file")
-    private File filepath1;
+    private File file1;
     @CommandLine.Parameters(index = "1", description = "path to second file ")
-    private File filepath2;
+    private File file2;
     @Option(names = {"-f", "--format"}, description = " output format [default: stylish]")
     private String formatOption = "stylish";
 
     @Override
     public Integer call() throws Exception { // your business logic goes here...
-        byte[] fileContents1 = Files.readAllBytes(filepath1.toPath());
-        byte[] fileContents2 = Files.readAllBytes(filepath2.toPath());
-        var file1Length = fileContents1.length;
-        var file2Length = fileContents2.length;
-        System.out.println("File1 length = " + file1Length);
-        System.out.println("File2 length = " + file2Length);
+        String jsonStr1 = Files.readString(file1.toPath());
+        String jsonStr2 = Files.readString(file2.toPath());
 
-        new Differ().generate(fileContents1, fileContents2);
+        var jsonStrLength1 = jsonStr1.length();
+        var jsonStrLength2 = jsonStr2.length();
+
+        System.out.println("File1 length = " + jsonStrLength1);
+        System.out.println("File2 length = " + jsonStrLength2);
+
+        new Differ().generate(jsonStr1, jsonStr2);
 
         return 0;
     }
